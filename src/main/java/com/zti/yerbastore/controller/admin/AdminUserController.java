@@ -1,12 +1,12 @@
 package com.zti.yerbastore.controller.admin;
 
+import com.zti.yerbastore.model.User;
 import com.zti.yerbastore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/admin/user", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -17,6 +17,14 @@ public class AdminUserController {
     @Autowired
     public AdminUserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping
+    public List<User> getAll() {
+        List<User> users = userService.findAll();
+        users.forEach(user -> user.setPassword(null));
+
+        return users;
     }
 
     @DeleteMapping(value = "/{email}")

@@ -28,4 +28,11 @@ public class Yerba {
     @DBRef(lazy = true)
     private Photo photo;
 
+    public Yerba(String name, List<String> ingredients, String originCountry, Weight weight) {
+        this.name = name;
+        this.ingredients = ingredients;
+        this.originCountry = originCountry;
+        this.weight = weight;
+    }
+
 }

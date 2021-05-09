@@ -2,8 +2,8 @@ package com.zti.yerbastore.controller;
 
 import com.zti.yerbastore.exception.ForbiddenException;
 import com.zti.yerbastore.model.User;
-import com.zti.yerbastore.model.message.Token;
-import com.zti.yerbastore.model.message.UserCredentials;
+import com.zti.yerbastore.model.response.Token;
+import com.zti.yerbastore.model.request.UserCredentials;
 import com.zti.yerbastore.security.SecretKeyGenerator;
 import com.zti.yerbastore.service.UserService;
 import io.jsonwebtoken.Jwts;
@@ -31,10 +31,13 @@ public class UserController {
 
     @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public User register(@RequestBody User user) {
+        User savedUser = userService.save(user);
+        savedUser.setPassword(null);
+
         return userService.save(user);
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping(path = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Token authenticate(@RequestBody UserCredentials userCredentials) {
         User user = userService.findByEmail(userCredentials.getEmail());
 

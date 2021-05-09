@@ -2,7 +2,7 @@ package com.zti.yerbastore;
 
 import com.zti.yerbastore.exception.ForbiddenException;
 import com.zti.yerbastore.exception.NotFoundException;
-import com.zti.yerbastore.model.message.Error;
+import com.zti.yerbastore.model.response.Error;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

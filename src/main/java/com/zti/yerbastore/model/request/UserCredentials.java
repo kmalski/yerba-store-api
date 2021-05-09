@@ -1,10 +1,8 @@
-package com.zti.yerbastore.model.message;
+package com.zti.yerbastore.model.request;
 
 import lombok.Data;
-import lombok.experimental.SuperBuilder;
 
 @Data
-@SuperBuilder
 public class UserCredentials {
 
     private String email;
