@@ -53,7 +53,7 @@ public class UserController {
 
             return Token.builder().token(token).build();
         } else {
-            throw new ForbiddenException("Dane logowania są nieprawidłowe!");
+            throw new ForbiddenException("Invalid credentials!");
         }
     }
 
