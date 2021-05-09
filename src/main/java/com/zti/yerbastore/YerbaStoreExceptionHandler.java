@@ -1,7 +1,8 @@
 package com.zti.yerbastore;
 
+import com.zti.yerbastore.exception.ForbiddenException;
 import com.zti.yerbastore.exception.NotFoundException;
-import com.zti.yerbastore.model.Error;
+import com.zti.yerbastore.model.message.Error;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,20 @@ import java.time.Instant;
 
 @RestControllerAdvice
 public class YerbaStoreExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Object> handleForbiddenException(ForbiddenException ex, WebRequest request) {
+        logger.error("Forbidden exception occurred: ", ex);
+
+        Error error = Error.builder()
+                .timestamp(Instant.now())
+                .reason("Forbidden")
+                .details(ex.getMessage())
+                .build();
+
+        return handleExceptionInternal(ex, error, HttpHeaders.EMPTY, HttpStatus.FORBIDDEN, request);
+    }
+
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {

@@ -1,4 +1,4 @@
-package com.zti.yerbastore.model;
+package com.zti.yerbastore.model.message;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;

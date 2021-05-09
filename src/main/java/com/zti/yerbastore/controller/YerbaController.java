@@ -29,14 +29,4 @@ public class YerbaController {
         return yerbaService.findById(id);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Yerba create(@RequestBody Yerba yerba) {
-        return yerbaService.save(yerba);
-    }
-
-    @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable String id) {
-        yerbaService.deleteById(id);
-    }
-
 }
