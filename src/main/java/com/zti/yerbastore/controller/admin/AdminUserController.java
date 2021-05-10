@@ -27,7 +27,7 @@ public class AdminUserController {
         return users;
     }
 
-    @DeleteMapping(value = "/{email}")
+    @DeleteMapping(path = "/{email}")
     public void delete(@PathVariable String email) {
         userService.deleteByEmail(email);
     }

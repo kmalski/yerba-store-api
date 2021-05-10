@@ -1,6 +1,7 @@
 package com.zti.yerbastore;
 
 import com.zti.yerbastore.exception.ForbiddenException;
+import com.zti.yerbastore.exception.InternalServerErrorException;
 import com.zti.yerbastore.exception.NotFoundException;
 import com.zti.yerbastore.model.response.Error;
 import org.springframework.http.HttpHeaders;
@@ -41,6 +42,19 @@ public class YerbaStoreExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
 
         return handleExceptionInternal(ex, error, HttpHeaders.EMPTY, HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ResponseEntity<Object> handleInternalServerErrorException(InternalServerErrorException ex, WebRequest request) {
+        logger.error("InternalServerError exception occurred: ", ex);
+
+        Error error = Error.builder()
+                .timestamp(Instant.now())
+                .reason("Internal Server Error")
+                .details(ex.getMessage())
+                .build();
+
+        return handleExceptionInternal(ex, error, HttpHeaders.EMPTY, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @Override

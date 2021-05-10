@@ -1,9 +1,6 @@
 package com.zti.yerbastore.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -58,7 +55,7 @@ public class JwtFilter extends BasicAuthenticationFilter {
             Set<SimpleGrantedAuthority> authoritySet = Collections.singleton(new SimpleGrantedAuthority(role));
 
             return Optional.of(new UsernamePasswordAuthenticationToken(email, null, authoritySet));
-        } catch (ExpiredJwtException exception) {
+        } catch (ExpiredJwtException | SignatureException exception) {
             return Optional.empty();
         }
     }

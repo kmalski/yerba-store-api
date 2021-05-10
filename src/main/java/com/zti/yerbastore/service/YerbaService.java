@@ -1,12 +1,13 @@
 package com.zti.yerbastore.service;
 
 import com.zti.yerbastore.exception.NotFoundException;
+import com.zti.yerbastore.model.Photo;
 import com.zti.yerbastore.model.Yerba;
-import com.zti.yerbastore.repository.PhotoRepository;
 import com.zti.yerbastore.repository.YerbaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,12 +16,12 @@ import java.util.List;
 public class YerbaService {
 
     private final YerbaRepository yerbaRepository;
-    private final PhotoRepository photoRepository;
+    private final PhotoService photoService;
 
     @Autowired
-    public YerbaService(YerbaRepository yerbaRepository, PhotoRepository photoRepository) {
+    public YerbaService(YerbaRepository yerbaRepository, PhotoService photoService) {
         this.yerbaRepository = yerbaRepository;
-        this.photoRepository = photoRepository;
+        this.photoService = photoService;
     }
 
     @Transactional(readOnly = true)
@@ -34,17 +35,31 @@ public class YerbaService {
                 .orElseThrow(() -> new NotFoundException("Yerba with id '" + id + "' does not exist."));
     }
 
-    public Yerba save(Yerba yerba) {
+    public Yerba insert(Yerba yerba) {
+        return yerbaRepository.insert(yerba);
+    }
+
+    public Yerba update(String id, Yerba yerba) {
+        findById(id);
+        yerba.setId(id);
+
         return yerbaRepository.save(yerba);
+    }
+
+    public Photo addPhoto(String id, MultipartFile photoFile) {
+        Yerba yerba = findById(id);
+        Photo photo = photoService.insert(photoFile);
+
+        yerba.setPhoto(photo);
+        yerbaRepository.save(yerba);
+
+        return photo;
     }
 
     public void deleteById(String id) {
         Yerba yerba = findById(id);
 
-        photoRepository
-                .findById(yerba.getPhoto().getId())
-                .ifPresent(value -> photoRepository.deleteById(value.getId()));
-
+        photoService.deleteById(yerba.getPhoto().getId());
         yerbaRepository.deleteById(yerba.getId());
     }
 }

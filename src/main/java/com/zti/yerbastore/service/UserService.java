@@ -4,6 +4,7 @@ import com.zti.yerbastore.exception.NotFoundException;
 import com.zti.yerbastore.model.User;
 import com.zti.yerbastore.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +15,12 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -31,8 +34,10 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("User with email '" + email + "' does not exist."));
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
+    public User insert(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        return userRepository.insert(user);
     }
 
     public void deleteByEmail(String email) {

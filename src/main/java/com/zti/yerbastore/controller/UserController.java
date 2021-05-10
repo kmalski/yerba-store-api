@@ -10,6 +10,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,25 +24,27 @@ import java.util.Date;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public User register(@RequestBody User user) {
-        User savedUser = userService.save(user);
+        User savedUser = userService.insert(user);
         savedUser.setPassword(null);
 
-        return userService.save(user);
+        return savedUser;
     }
 
     @PostMapping(path = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Token authenticate(@RequestBody UserCredentials userCredentials) {
         User user = userService.findByEmail(userCredentials.getEmail());
 
-        if (user.getPassword().equals(userCredentials.getPassword())) {
+        if (passwordEncoder.matches(userCredentials.getPassword(), user.getPassword())) {
             String token = Jwts.builder()
                     .setSubject(user.getEmail())
                     .claim("email", user.getEmail())

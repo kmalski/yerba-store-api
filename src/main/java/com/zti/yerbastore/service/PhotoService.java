@@ -1,5 +1,6 @@
 package com.zti.yerbastore.service;
 
+import com.zti.yerbastore.exception.InternalServerErrorException;
 import com.zti.yerbastore.exception.NotFoundException;
 import com.zti.yerbastore.model.Photo;
 import com.zti.yerbastore.repository.PhotoRepository;
@@ -29,13 +30,19 @@ public class PhotoService {
                 .orElseThrow(() -> new NotFoundException("Photo with id '" + id + "' does not exist."));
     }
 
-    public Photo save(String title, MultipartFile file) throws IOException {
-        Photo photo = Photo.builder()
-                .title(title)
-                .image(new Binary(BsonBinarySubType.BINARY, file.getBytes()))
-                .build();
+    public Photo insert(MultipartFile file) {
+        try {
+            Photo photo = new Photo(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
 
-        return photoRepository.save(photo);
+            return photoRepository.insert(photo);
+        } catch (IOException ex) {
+            throw new InternalServerErrorException("Could not upload file.");
+        }
     }
 
+    public void deleteById(String id) {
+        photoRepository
+                .findById(id)
+                .ifPresent(value -> photoRepository.deleteById(value.getId()));
+    }
 }
