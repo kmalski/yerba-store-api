@@ -2,13 +2,13 @@ package com.zti.yerbastore.controller;
 
 import com.zti.yerbastore.exception.ForbiddenException;
 import com.zti.yerbastore.model.User;
-import com.zti.yerbastore.model.response.Token;
 import com.zti.yerbastore.model.request.UserCredentials;
+import com.zti.yerbastore.model.response.Token;
 import com.zti.yerbastore.security.SecretKeyGenerator;
 import com.zti.yerbastore.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,19 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public User register(@RequestBody User user) {

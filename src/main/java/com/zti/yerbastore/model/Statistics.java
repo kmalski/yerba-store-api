@@ -3,22 +3,21 @@ package com.zti.yerbastore.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
-@Document(collection = "photos")
+@Document(collection = "statistics")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Photo {
+public class Statistics {
+
     @Id
     private String id;
 
-    private Binary image;
+    private Integer websiteViews;
 
-    public Photo(Binary image) {
-        this.image = image;
+    public Statistics(Integer websiteViews) {
+        this.websiteViews = websiteViews;
     }
-
 }

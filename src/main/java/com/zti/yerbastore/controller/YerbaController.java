@@ -1,15 +1,21 @@
 package com.zti.yerbastore.controller;
 
+import com.zti.yerbastore.aspect.WebsiteViewsTrigger;
+import com.zti.yerbastore.aspect.YerbaViewsTrigger;
 import com.zti.yerbastore.model.Photo;
 import com.zti.yerbastore.model.Yerba;
 import com.zti.yerbastore.service.PhotoService;
 import com.zti.yerbastore.service.YerbaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/yerba", produces = MediaType.APPLICATION_JSON_VALUE)
 public class YerbaController {
@@ -17,17 +23,13 @@ public class YerbaController {
     private final YerbaService yerbaService;
     private final PhotoService photoService;
 
-    @Autowired
-    public YerbaController(YerbaService yerbaService, PhotoService photoService) {
-        this.yerbaService = yerbaService;
-        this.photoService = photoService;
-    }
-
+    @WebsiteViewsTrigger
     @GetMapping
     public List<Yerba> getAll() {
         return yerbaService.findAll();
     }
 
+    @YerbaViewsTrigger
     @GetMapping(path = "/{id}")
     public Yerba getById(@PathVariable String id) {
         return yerbaService.findById(id);

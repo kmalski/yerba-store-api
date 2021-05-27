@@ -2,22 +2,18 @@ package com.zti.yerbastore.controller.admin;
 
 import com.zti.yerbastore.model.User;
 import com.zti.yerbastore.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/admin/user", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminUserController {
 
     private final UserService userService;
-
-    @Autowired
-    public AdminUserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping
     public List<User> getAll() {
