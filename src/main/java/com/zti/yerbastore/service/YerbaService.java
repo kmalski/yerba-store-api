@@ -55,8 +55,7 @@ public class YerbaService {
         Yerba yerba = yerbaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Yerba with id '" + id + "' does not exist."));
 
-        if (yerba.getPhoto() != null)
-            yerba.getPhoto().setImage(null);
+        yerba.setPhoto(null);
 
         return yerba;
     }
