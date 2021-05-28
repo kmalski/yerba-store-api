@@ -23,6 +23,14 @@ public class AdminUserController {
         return users;
     }
 
+    @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public User register(@RequestBody User user) {
+        User savedUser = userService.insert(user);
+        savedUser.setPassword(null);
+
+        return savedUser;
+    }
+
     @DeleteMapping(path = "/{email}")
     public void delete(@PathVariable String email) {
         userService.deleteByEmail(email);

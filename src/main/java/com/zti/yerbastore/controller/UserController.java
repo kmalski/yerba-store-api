@@ -26,14 +26,6 @@ public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public User register(@RequestBody User user) {
-        User savedUser = userService.insert(user);
-        savedUser.setPassword(null);
-
-        return savedUser;
-    }
-
     @PostMapping(path = "/authenticate", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Token authenticate(@RequestBody UserCredentials userCredentials) {
         User user = userService.findByEmail(userCredentials.getEmail());
