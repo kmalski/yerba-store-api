@@ -6,7 +6,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,7 +16,6 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-@Component
 public class JwtFilter extends BasicAuthenticationFilter {
 
     public JwtFilter(AuthenticationManager manager) {
@@ -31,11 +29,7 @@ public class JwtFilter extends BasicAuthenticationFilter {
         if (header == null || !header.startsWith("Bearer ")) {
             SecurityContextHolder.getContext().setAuthentication(null);
         } else {
-            UsernamePasswordAuthenticationToken authResult = authenticateByToken(header)
-                    .orElseGet(() -> {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        return null;
-                    });
+            UsernamePasswordAuthenticationToken authResult = authenticateByToken(header).orElse(null);
 
             SecurityContextHolder.getContext().setAuthentication(authResult);
         }
