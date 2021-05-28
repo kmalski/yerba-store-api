@@ -8,10 +8,7 @@ import com.zti.yerbastore.service.PhotoService;
 import com.zti.yerbastore.service.YerbaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,8 +22,12 @@ public class YerbaController {
 
     @WebsiteViewsTrigger
     @GetMapping
-    public List<Yerba> getAll() {
-        return yerbaService.findAll();
+    public List<Yerba> getAll(@RequestParam(required = false) String name,
+                              @RequestParam(required = false) String originCountry) {
+        if (name == null && originCountry == null)
+            return yerbaService.findAll();
+        else
+            return yerbaService.findAllByParameters(name, originCountry);
     }
 
     @YerbaViewsTrigger

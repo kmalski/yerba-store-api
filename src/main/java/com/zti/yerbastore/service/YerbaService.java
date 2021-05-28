@@ -5,11 +5,15 @@ import com.zti.yerbastore.model.Photo;
 import com.zti.yerbastore.model.Yerba;
 import com.zti.yerbastore.repository.YerbaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
 
 @Service
 @Transactional
@@ -29,11 +33,30 @@ public class YerbaService {
     }
 
     @Transactional(readOnly = true)
+    public List<Yerba> findAllByParameters(String name, String originCountry) {
+        ExampleMatcher matcher = ExampleMatcher
+                .matchingAll()
+                .withMatcher("name", contains().ignoreCase())
+                .withMatcher("originCountry", contains().ignoreCase());
+
+        Yerba example = Yerba.builder()
+                .name(name)
+                .originCountry(originCountry)
+                .build();
+
+        List<Yerba> yerbas = yerbaRepository.findAll(Example.of(example, matcher));
+        yerbas.forEach(yerba -> yerba.setPhoto(null));
+
+        return yerbas;
+    }
+
+    @Transactional(readOnly = true)
     public Yerba findById(String id) {
         Yerba yerba = yerbaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Yerba with id '" + id + "' does not exist."));
 
-        yerba.getPhoto().setImage(null);
+        if (yerba.getPhoto() != null)
+            yerba.getPhoto().setImage(null);
 
         return yerba;
     }
@@ -53,12 +76,12 @@ public class YerbaService {
         return yerbaRepository.save(yerba);
     }
 
-    public Yerba incrementViews(String id) {
+    public void incrementViews(String id) {
         Yerba yerba = findById(id);
 
         yerba.setViews(yerba.getViews() + 1);
 
-        return yerbaRepository.save(yerba);
+        yerbaRepository.save(yerba);
     }
 
     public Photo setPhoto(String id, MultipartFile photoFile) {
