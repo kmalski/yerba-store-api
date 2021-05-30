@@ -52,12 +52,8 @@ public class YerbaService {
 
     @Transactional(readOnly = true)
     public Yerba findById(String id) {
-        Yerba yerba = yerbaRepository.findById(id)
+        return yerbaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Yerba with id '" + id + "' does not exist."));
-
-        yerba.setPhoto(null);
-
-        return yerba;
     }
 
     public Yerba insert(Yerba yerba) {

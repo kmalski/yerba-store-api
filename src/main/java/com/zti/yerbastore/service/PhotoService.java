@@ -3,6 +3,7 @@ package com.zti.yerbastore.service;
 import com.zti.yerbastore.exception.InternalServerErrorException;
 import com.zti.yerbastore.exception.NotFoundException;
 import com.zti.yerbastore.model.Photo;
+import com.zti.yerbastore.model.Yerba;
 import com.zti.yerbastore.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.BsonBinarySubType;
@@ -21,7 +22,12 @@ public class PhotoService {
     private final PhotoRepository photoRepository;
 
     @Transactional(readOnly = true)
-    public Photo findById(String id) {
+    public Photo findByYerba(Yerba yerba) {
+        if (yerba.getPhoto() == null)
+            throw new NotFoundException("Yerba with id '" + yerba.getId() + "' does not have photo.");
+
+        String id = yerba.getPhoto().getId();
+
         return photoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Photo with id '" + id + "' does not exist."));
     }

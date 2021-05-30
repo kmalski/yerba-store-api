@@ -33,13 +33,15 @@ public class YerbaController {
     @YerbaViewsTrigger
     @GetMapping(path = "/{id}")
     public Yerba getById(@PathVariable String id) {
-        return yerbaService.findById(id);
+        Yerba yerba = yerbaService.findById(id);
+        yerba.setPhoto(null);
+        return yerba;
     }
 
     @GetMapping(path = "/{id}/photo", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public byte[] getYerbaPhoto(@PathVariable String id) {
         Yerba yerba = yerbaService.findById(id);
-        Photo photo = photoService.findById(yerba.getPhoto().getId());
+        Photo photo = photoService.findByYerba(yerba);
 
         return photo.getImage().getData();
     }
