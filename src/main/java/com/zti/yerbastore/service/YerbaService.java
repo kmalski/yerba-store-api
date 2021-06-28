@@ -67,6 +67,7 @@ public class YerbaService {
 
         yerba.setId(id);
         yerba.setViews(dbYerba.getViews());
+        yerba.setPhoto(dbYerba.getPhoto());
 
         return yerbaRepository.save(yerba);
     }
@@ -92,7 +93,8 @@ public class YerbaService {
     public void deleteById(String id) {
         Yerba yerba = findById(id);
 
-        photoService.deleteById(yerba.getPhoto().getId());
+        if (yerba.getPhoto() != null)
+            photoService.deleteById(yerba.getPhoto().getId());
         yerbaRepository.deleteById(yerba.getId());
     }
 }

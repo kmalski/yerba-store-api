@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Document(collection = "yerbas")
 @JsonInclude(JsonInclude.Include.NON_NULL)
